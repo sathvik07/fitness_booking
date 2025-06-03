@@ -1,17 +1,24 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import NoResultFound
 from typing import List
 
 from models import FitnessClass, Booking
-from schemas import BookingRequest
+from schemas import BookingRequest, FitnessClassOut, BookingOut
 from utils import convert_ist_to_timezone
 
 
-def get_all_classes(db: Session, timezone: str = "Asia/Kolkata") -> List[FitnessClass]:
+def get_all_classes(db: Session, timezone: str = "Asia/Kolkata") -> List[FitnessClassOut]:
     classes = db.query(FitnessClass).all()
+    result = []
+
     for c in classes:
-        c.datetime = convert_ist_to_timezone(c.datetime, timezone)
-    return classes
+        result.append(FitnessClassOut(
+            id=c.id,
+            name=c.name,
+            instructor=c.instructor,
+            available_slots=c.available_slots,
+            datetime=convert_ist_to_timezone(c.datetime, timezone)
+        ))
+    return result
 
 
 def book_class(db: Session, data: BookingRequest) -> Booking:

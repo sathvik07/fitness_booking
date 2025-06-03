@@ -6,7 +6,6 @@ import models
 import crud
 from schemas import FitnessClassOut, BookingRequest, BookingOut
 
-# Create tables in the database
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Fitness Booking API")
